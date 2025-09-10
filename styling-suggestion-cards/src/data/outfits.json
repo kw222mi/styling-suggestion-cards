@@ -1,0 +1,80 @@
+[
+  {
+    "id": "casual-chic",
+    "title": "Casual Chic",
+    "description": "Avslappnat men sammansatt – perfekt för vardagsärenden eller en fika.",
+    "tags": [
+      "vardag",
+      "lager-på-lager",
+      "bekvämt"
+    ],
+    "items": [
+      "Stickad tröja",
+      "Rak jeans",
+      "Vita sneakers"
+    ],
+    "image": "./assets/casual.svg"
+  },
+  {
+    "id": "smart-office",
+    "title": "Smart Office",
+    "description": "Skärpt silhuett med mjuka material – funkar på kontoret och efter jobbet.",
+    "tags": [
+      "office",
+      "cleantailoring"
+    ],
+    "items": [
+      "Kavaj",
+      "T-shirt",
+      "Pressveckbyxa",
+      "Loafers"
+    ],
+    "image": "./assets/smart.svg"
+  },
+  {
+    "id": "sporty-street",
+    "title": "Sporty Street",
+    "description": "Sportiga detaljer möter city – funktion och stil i ett.",
+    "tags": [
+      "athleisure",
+      "street"
+    ],
+    "items": [
+      "Hoodie",
+      "Cargobyxa",
+      "Chunky sneakers"
+    ],
+    "image": "./assets/sporty.svg"
+  },
+  {
+    "id": "evening-glow",
+    "title": "Evening Glow",
+    "description": "Kvällslook med lyster – enkel bas som lyfts av accessoarer.",
+    "tags": [
+      "kväll",
+      "glow"
+    ],
+    "items": [
+      "Satintopp",
+      "Svart slacks",
+      "Klackar",
+      "Clutch"
+    ],
+    "image": "./assets/evening.svg"
+  },
+  {
+    "id": "denim-days",
+    "title": "Denim Days",
+    "description": "Denim-on-denim som hålls mjuk med ljusa toner.",
+    "tags": [
+      "denim",
+      "vardag"
+    ],
+    "items": [
+      "Jeansjacka",
+      "Vit skjorta",
+      "Mellanblå jeans"
+    ],
+    "image": "./assets/denim.svg"
+  }
+]
