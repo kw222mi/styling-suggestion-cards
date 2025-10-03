@@ -1,16 +1,32 @@
-export default function Header({ onNewStyle, favoritesCount, onClearFavorites }){
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useTheme } from "../theme/ThemeProvider.jsx";
+
+export default function Header() {
+  const { pathname } = useLocation();
+  const nav = useNavigate();
+  const { theme, toggle } = useTheme();
+
   return (
     <div className="header">
-      <h1>Styling Suggestion Cards</h1>
+      <h1 style={{ cursor: "pointer" }} onClick={() => nav("/")}>
+        Styling Suggestion Cards
+      </h1>
       <div className="actions">
-        <button onClick={onNewStyle} aria-label="Ny stil">🎲 Ny stil</button>
-        <button onClick={onClearFavorites} className="ghost" aria-label="Rensa favoriter">
-          Rensa favoriter ({favoritesCount})
+        <Link to="/">
+          <button className={pathname === "/" ? "" : "ghost"}>Utforska</button>
+        </Link>
+        <Link to="/favorites">
+          <button className={pathname === "/favorites" ? "" : "ghost"}>
+            Favoriter
+          </button>
+        </Link>
+        <button onClick={toggle} className="ghost" aria-label="Byt tema">
+          {theme === "light" ? "🌙 Dark" : "☀️ Light"}
         </button>
         <a href="https://github.com/" target="_blank" rel="noreferrer">
           <button className="ghost">GitHub</button>
         </a>
       </div>
     </div>
-  )
+  );
 }

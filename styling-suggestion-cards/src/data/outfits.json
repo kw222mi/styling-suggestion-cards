@@ -8,6 +8,7 @@
       "lager-på-lager",
       "bekvämt"
     ],
+    "category": "casual",
     "items": [
       "Stickad tröja",
       "Rak jeans",
@@ -23,6 +24,7 @@
       "office",
       "cleantailoring"
     ],
+    "category": "office",
     "items": [
       "Kavaj",
       "T-shirt",
@@ -39,6 +41,7 @@
       "athleisure",
       "street"
     ],
+    "category": "sporty",
     "items": [
       "Hoodie",
       "Cargobyxa",
@@ -54,6 +57,7 @@
       "kväll",
       "glow"
     ],
+    "category": "Evening",
     "items": [
       "Satintopp",
       "Svart slacks",
@@ -70,6 +74,7 @@
       "denim",
       "vardag"
     ],
+    "category": "denim",
     "items": [
       "Jeansjacka",
       "Vit skjorta",
