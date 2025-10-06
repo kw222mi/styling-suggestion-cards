@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import outfitsData from "../data/outfits.json";
+import useOutfits from "../hooks/useOutfits.js";
 import Filzer from "../components/Filzer.jsx";
 import SearchBar from "../components/SearchBar.jsx";
 import StyleCard from "../components/StyleCard.jsx";
@@ -20,24 +20,10 @@ const pickRandom = (arr, n = 3) => {
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // --- Resolve asset URLs ---
-  const all = useMemo(
-    () =>
-      outfitsData.map((o) => {
-        const file = o.image.split("/").pop(); // t.ex. "casual.svg"
-        const url = new URL(`../assets/${file}`, import.meta.url).href; // relativt /pages/
-        return { ...o, image: url };
-      }),
-    []
-  );
+  // 1) Ladda data (ALLTID första hook)
+  const { outfits: all, error, loading } = useOutfits();
 
-  // --- Shared IDs via ?share=a,b,c ---
-  const sharedIds = useMemo(() => {
-    const s = searchParams.get("share");
-    return s ? new Set(s.split(",")) : null;
-  }, [searchParams]);
-
-  // --- Favorites ---
+  // 2) Övriga hooks (körs alltid, i samma ordning)
   const [favorites, setFavorites] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem(FAVORITES_KEY)) ?? [];
@@ -45,14 +31,18 @@ export default function Home() {
       return [];
     }
   });
-  useEffect(
-    () => localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites)),
-    [favorites]
-  );
+  useEffect(() => {
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+  }, [favorites]);
 
-  // --- Filter & search ---
   const [category, setCategory] = useState("all");
   const [q, setQ] = useState("");
+
+  // Läs ev. delade id:n från URL
+  const sharedIds = useMemo(() => {
+    const s = searchParams.get("share");
+    return s ? new Set(s.split(",")) : null;
+  }, [searchParams]);
 
   // Rensa ?share när användaren börjar filtrera/söka
   useEffect(() => {
@@ -62,16 +52,15 @@ export default function Home() {
     });
   }, [category, q, setSearchParams]);
 
-  // --- Init-suggestions (beaktar share) ---
-  const [suggestions, setSuggestions] = useState(() => {
-    if (sharedIds) {
-      const pre = all.filter((o) => sharedIds.has(o.id));
-      return pre.length ? pre : pickRandom(all);
-    }
-    return pickRandom(all);
-  });
+  // Första förslag när data finns
+  const [suggestions, setSuggestions] = useState([]);
+  useEffect(() => {
+    if (loading || !all.length) return;
+    const pre = sharedIds ? all.filter((o) => sharedIds.has(o.id)) : [];
+    setSuggestions(pre.length ? pre : pickRandom(all));
+  }, [loading, all, sharedIds]);
 
-  // --- Filtered list ---
+  // Filtrering/sök
   const filtered = useMemo(() => {
     const byCat =
       category === "all" ? all : all.filter((o) => o.category === category);
@@ -86,22 +75,21 @@ export default function Home() {
     );
   }, [all, category, q]);
 
-  // --- Displayed: filtrerat om nåt filter/sök/share; annars 3 slump ---
+  // Vad som visas: filtrerat om filter/sök/share aktivt, annars 3 slump
   const hasActiveFilter = category !== "all" || q.trim() !== "" || !!sharedIds;
   const displayed = useMemo(() => {
     if (hasActiveFilter) return filtered;
     return suggestions;
   }, [hasActiveFilter, filtered, suggestions]);
 
-  // --- Favorite IDs (för snabb lookup) ---
   const favoriteIds = useMemo(
     () => new Set(favorites.map((f) => f.id)),
     [favorites]
   );
 
-  // --- Actions ---
+  // Actions
   const newStyle = () => {
-    const pool = category === "all" && !q ? all : filtered;
+    const pool = hasActiveFilter ? filtered : all;
     setSuggestions(pickRandom(pool));
     setSearchParams((p) => {
       p.delete("share");
@@ -130,64 +118,92 @@ export default function Home() {
     alert("Länk kopierad! Klistra in vart du vill ✔");
   };
 
+  // Framer Motion-varianter
   const listVariants = {
-    hidden: { opacity: 1 }, // behåll container synlig
+    hidden: { opacity: 1 },
     show: { opacity: 1, transition: { staggerChildren: 0.06 } },
   };
-
   const itemVariants = {
     hidden: { opacity: 0, y: 8, scale: 0.98 },
     show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.18 } },
     exit: { opacity: 0, y: 8, scale: 0.98, transition: { duration: 0.15 } },
   };
 
-
-  // --- Render ---
+  // 3) Render – statusmeddelanden INNE i JSX, så hooks-ordningen alltid är konstant
   return (
     <div>
-      <Filzer category={category} setCategory={setCategory} />
-      <SearchBar value={q} onChange={setQ} />
-      <div className="actions" style={{ marginBottom: 16 }}>
-        <motion.button
-          onClick={newStyle}
-          whileTap={{ scale: 0.9 }}
-          animate={{ scale: [1, 1.05, 1] }}
-          transition={{ duration: 0.25 }}
-          whileHover={{ scale: 1.05 }}
-         
-        >
-          🎲 Ny stil
-        </motion.button>
-        <motion.button
-          className="ghost"
-          onClick={shareLink}
-          whileTap={{ scale: 0.9 }}
-          animate={{ scale: [1, 1.05, 1] }}
-          transition={{ duration: 0.25 }}
-          whileHover={{ scale: 1.05 }}
-        >
-          🔗 Dela dessa
-        </motion.button>
-      </div>
+      {loading && <div className="status">Laddar outfits...</div>}
+      {error && <div className="status error">Fel: {error}</div>}
 
-      <motion.div
-        className="grid"
-        variants={listVariants}
-        initial="hidden"
-        animate="show"
-      >
-        <AnimatePresence mode="popLayout">
-          {displayed.map((o) => (
-            <motion.div key={o.id} variants={itemVariants} exit="exit" layout>
-              <StyleCard
-                outfit={o}
-                isFavorite={favoriteIds.has(o.id)}
-                onToggleFavorite={() => toggleFavorite(o)}
-              />
+      {!loading && !error && (
+        <>
+          <Filzer category={category} setCategory={setCategory} />
+          <SearchBar value={q} onChange={setQ} />
+
+          <div className="actions" style={{ marginBottom: 16 }}>
+            <motion.button
+              onClick={newStyle}
+              whileTap={{ scale: 0.9 }}
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 0.25 }}
+            >
+              🎲 Ny stil
+            </motion.button>
+
+            <motion.button
+              className="ghost"
+              onClick={shareLink}
+              whileTap={{ scale: 0.9 }}
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 0.25 }}
+            >
+              🔗 Dela dessa
+            </motion.button>
+          </div>
+
+          {/* Tomt tillstånd */}
+          {displayed.length === 0 && (
+            <div className="empty">
+              <p>Inga outfits matchade din sökning eller filter.</p>
+              <button
+                onClick={() => {
+                  setCategory("all");
+                  setQ("");
+                }}
+              >
+                Återställ filter
+              </button>
+            </div>
+          )}
+
+          {/* Grid med mjuk fade/scale */}
+          {displayed.length > 0 && (
+            <motion.div
+              className="grid"
+              variants={listVariants}
+              initial="hidden"
+              animate="show"
+            >
+              <AnimatePresence mode="popLayout">
+                {displayed.map((o) => (
+                  <motion.div
+                    key={o.id}
+                    variants={itemVariants}
+                    exit="exit"
+                    layout
+                  >
+                    <StyleCard
+                      outfit={o}
+                      isFavorite={favoriteIds.has(o.id)}
+                      onToggleFavorite={() => toggleFavorite(o)}
+                    />
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </motion.div>
-          ))}
-        </AnimatePresence>
-      </motion.div>
+          )}
+        </>
+      )}
     </div>
   );
 }

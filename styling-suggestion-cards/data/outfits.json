@@ -1,0 +1,141 @@
+[
+  {
+    "id": "casual-1",
+    "title": "Casual Jeans & Tee",
+    "description": "Avslappnat med ren silhuett.",
+    "category": "casual",
+    "tags": ["vardag", "basic", "minimal"],
+    "items": ["Blå jeans", "Vit t-shirt", "Sneakers"],
+    "image": "casual2.png"
+  },
+  {
+    "id": "casual-2",
+    "title": "Weekend Knit",
+    "description": "Mjuk stickad tröja och raka jeans.",
+    "category": "casual",
+    "tags": ["stickat", "mys", "lager"],
+    "items": ["Stickad tröja", "Rak jeans", "Vita sneakers"],
+    "image": "casual2.png"
+  },
+  {
+    "id": "casual-3",
+    "title": "Denim Layers",
+    "description": "Denim-on-denim i ljusa toner.",
+    "category": "casual",
+    "tags": ["denim", "lager"],
+    "items": ["Jeansjacka", "Vit skjorta", "Mellanblå jeans"],
+    "image": "denim.png"
+  },
+
+  {
+    "id": "office-1",
+    "title": "Smart Office",
+    "description": "Kavaj med mjuka material för jobb & AW.",
+    "category": "office",
+    "tags": ["office", "tailoring"],
+    "items": ["Kavaj", "T-shirt", "Pressveckbyxa", "Loafers"],
+    "image": "office.png"
+  },
+  {
+    "id": "office-2",
+    "title": "Monochrome Suit",
+    "description": "Monokrom kostym med diskreta accessoarer.",
+    "category": "office",
+    "tags": ["kostym", "monokrom"],
+    "items": ["Kostymkavaj", "Kostymbyxa", "Silkestopp", "Loafers"],
+    "image": "office.png"
+  },
+  {
+    "id": "office-3",
+    "title": "Business Casual",
+    "description": "Skjorta och stickad väst för lagom uppklätt.",
+    "category": "office",
+    "tags": ["business-casual", "lager"],
+    "items": ["Vit skjorta", "Stickad väst", "Chinos", "Derbyskor"],
+    "image": "office.png"
+  },
+
+  {
+    "id": "sporty-1",
+    "title": "Sporty Street",
+    "description": "Hoodie och cargobyxa med chunky sneakers.",
+    "category": "sporty",
+    "tags": ["athleisure", "street"],
+    "items": ["Hoodie", "Cargobyxa", "Chunky sneakers"],
+    "image": "sporty.png"
+  },
+  {
+    "id": "sporty-2",
+    "title": "Run & Errands",
+    "description": "Funktionsjacka och tights för rörelse.",
+    "category": "sporty",
+    "tags": ["löpning", "funktion"],
+    "items": ["Löparjacka", "Tights", "Löparskor", "Keps"],
+    "image": "sporty.png"
+  },
+  {
+    "id": "sporty-3",
+    "title": "Court Clean",
+    "description": "Sportig piké möter vida mjukisbyxor.",
+    "category": "sporty",
+    "tags": ["tennis", "clean"],
+    "items": ["Pikétröja", "Vida joggers", "Vita sneakers"],
+    "image": "sporty.png"
+  },
+
+  {
+    "id": "evening-1",
+    "title": "Evening Glow",
+    "description": "Satintopp och svarta slacks med klackar.",
+    "category": "evening",
+    "tags": ["kväll", "glow"],
+    "items": ["Satintopp", "Svarta slacks", "Klackar", "Clutch"],
+    "image": "evening2.png"
+  },
+  {
+    "id": "evening-2",
+    "title": "Little Black Dress",
+    "description": "Klassisk LBD med metallisk väska.",
+    "category": "evening",
+    "tags": ["klänning", "klassiker"],
+    "items": ["Svart klänning", "Slingbacks", "Metallic clutch"],
+    "image": "evening2.png"
+  },
+  {
+    "id": "evening-3",
+    "title": "Satin & Suit",
+    "description": "Satinskjorta i kostym-look för kväll.",
+    "category": "evening",
+    "tags": ["satinskjorta", "kostym"],
+    "items": ["Satinskjorta", "Rak kostymbyxa", "Pumps", "Halsband"],
+    "image": "evening2.png"
+  },
+
+  {
+    "id": "denim-1",
+    "title": "Denim Days",
+    "description": "Ljus denim med vit bas och loafers.",
+    "category": "denim",
+    "tags": ["denim", "vardag"],
+    "items": ["Jeansjacka", "Vit t-shirt", "Ljus jeans", "Loafers"],
+    "image": "denim.png"
+  },
+  {
+    "id": "denim-2",
+    "title": "Wide-Leg Indigo",
+    "description": "Indigoblå vida jeans med stickad topp.",
+    "category": "denim",
+    "tags": ["indigo", "wide-leg"],
+    "items": ["Stickad topp", "Vida jeans", "Sneakers"],
+    "image": "denim.png"
+  },
+  {
+    "id": "denim-3",
+    "title": "Trucker & Tee",
+    "description": "Truckerjacka, vintage-tee och boots.",
+    "category": "denim",
+    "tags": ["trucker", "vintage"],
+    "items": ["Denimjacka", "Vintage t-shirt", "Svarta jeans", "Chelsea boots"],
+    "image": "denim.png"
+  }
+]
