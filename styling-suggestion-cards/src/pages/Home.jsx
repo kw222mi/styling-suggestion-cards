@@ -5,6 +5,7 @@ import useOutfits from "../hooks/useOutfits.js";
 import Filzer from "../components/Filzer.jsx";
 import SearchBar from "../components/SearchBar.jsx";
 import StyleCard from "../components/StyleCard.jsx";
+import { copy } from "../lib/clipboard.js";
 
 const FAVORITES_KEY = "ssc_favorites_v2";
 
@@ -18,10 +19,23 @@ const pickRandom = (arr, n = 3) => {
 };
 
 export default function Home() {
+
+  const [offline, setOffline] = useState(!navigator.onLine);
+  useEffect(() => {
+    const up = () => setOffline(false),
+      down = () => setOffline(true);
+    window.addEventListener("online", up);
+    window.addEventListener("offline", down);
+    return () => {
+      window.removeEventListener("online", up);
+      window.removeEventListener("offline", down);
+    };
+  }, []);
+
   const [searchParams, setSearchParams] = useSearchParams();
 
   // 1) Ladda data (ALLTID första hook)
-  const { outfits: all, error, loading } = useOutfits();
+ const { outfits: all, error, loading, reload } = useOutfits();
 
   // 2) Övriga hooks (körs alltid, i samma ordning)
   const [favorites, setFavorites] = useState(() => {
@@ -39,10 +53,17 @@ export default function Home() {
   const [q, setQ] = useState("");
 
   // Läs ev. delade id:n från URL
-  const sharedIds = useMemo(() => {
-    const s = searchParams.get("share");
-    return s ? new Set(s.split(",")) : null;
-  }, [searchParams]);
+const sharedIds = useMemo(() => {
+  const s = searchParams.get("share");
+  if (!s) return null;
+  const ids = s
+    .split(",")
+    .map((x) => x.trim())
+    .filter(Boolean);
+  if (ids.length === 0) return null;
+  return new Set(ids);
+}, [searchParams]);
+
 
   // Rensa ?share när användaren börjar filtrera/söka
   useEffect(() => {
@@ -105,18 +126,23 @@ export default function Home() {
     );
   };
 
-  const shareLink = () => {
-    const pick = displayed.length > 3 ? displayed.slice(0, 3) : displayed;
-    const ids = pick.map((o) => o.id).join(",");
-    setSearchParams((p) => {
-      p.set("share", ids);
-      return p;
-    });
-    navigator.clipboard?.writeText(
-      `${location.origin}${location.pathname}?share=${ids}`
-    );
+const shareLink = async () => {
+  const pick = displayed.length > 3 ? displayed.slice(0, 3) : displayed;
+  const ids = pick.map((o) => o.id).join(",");
+  setSearchParams((p) => {
+    p.set("share", ids);
+    return p;
+  });
+
+  const url = `${location.origin}${location.pathname}?share=${ids}`;
+  const ok = await copy(url);
+
+  if (ok) {
     alert("Länk kopierad! Klistra in vart du vill ✔");
-  };
+  } else {
+    window.prompt("Kunde inte kopiera automatiskt. Kopiera länken:", url);
+  }
+};
 
   // Framer Motion-varianter
   const listVariants = {
@@ -132,8 +158,20 @@ export default function Home() {
   // 3) Render – statusmeddelanden INNE i JSX, så hooks-ordningen alltid är konstant
   return (
     <div>
+      {offline && (
+        <div className="status">
+          Du är offline – vissa funktioner kan saknas.
+        </div>
+      )}
+
       {loading && <div className="status">Laddar outfits...</div>}
-      {error && <div className="status error">Fel: {error}</div>}
+
+      {error && (
+        <div className="status error">
+          <p>Fel: {error}</p>
+          <button onClick={reload}>Försök igen</button>
+        </div>
+      )}
 
       {!loading && !error && (
         <>

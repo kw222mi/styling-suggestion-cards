@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import SafeImg from "../components/SafeImg"
 
 export default function StyleCard({ outfit, isFavorite, onToggleFavorite }){
    return (
@@ -10,7 +11,7 @@ export default function StyleCard({ outfit, isFavorite, onToggleFavorite }){
        transition={{ type: "spring", stiffness: 300, damping: 20, mass: 0.2 }}
        layout
      >
-       <img src={outfit.image} alt={outfit.title} loading="lazy" />
+       <SafeImg src={outfit.image} alt={outfit.title} />
        <div className="content">
          <strong>{outfit.title}</strong>
          <p style={{ opacity: 0.9 }}>{outfit.description}</p>

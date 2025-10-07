@@ -143,3 +143,45 @@ button:focus-visible {
 }
 .card button:hover { transform: scale(1.05); }
 
+.status, .empty {
+  text-align: center;
+  padding: 40px 16px;
+  opacity: 0.85;
+}
+
+.status.error {
+  color: #d33;
+}
+
+.empty button {
+  margin-top: 12px;
+  background: #2a6df4;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.empty button:hover {
+  background: #1d4ed8;
+}
+
+.status, .empty {
+  text-align: center;
+  padding: 40px 16px;
+  opacity: 0.9;
+}
+.status.error { color: #d33; }
+.status.error button {
+  margin-top: 12px;
+  background: #2a6df4;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.status.error button:hover { background: #1d4ed8; }
+
+.empty button:hover { background: #1d4ed8; }
