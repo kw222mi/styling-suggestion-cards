@@ -1,139 +1,179 @@
 
-:root{
-  --radius: 16px;
-}
 
-:root { color-scheme: light; }
+
+/*********************************************************
+ * BASE (variabler, reset, dark-mode)
+ *********************************************************/
+:root {
+  --radius: 16px;
+  color-scheme: light;
+}
 :root[data-theme="dark"] { color-scheme: dark; }
 
+* { box-sizing: border-box; }
+
+body {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji','Segoe UI Emoji';
+  margin: 0;
+  background: #f7f7f8;
+  color: #111;
+}
+
+/* Dark-mode overrides (generella) */
 :root[data-theme="dark"] body { background:#0f1115; color:#e7eaf0; }
 :root[data-theme="dark"] .card { background:#151821; border-color:#202436; }
 :root[data-theme="dark"] button { background:#151821; border-color:#202436; color:#e7eaf0; }
 :root[data-theme="dark"] .badge { background:#1b2030; border-color:#202436; }
 
-
-*{box-sizing:border-box}
-
-body{
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji','Segoe UI Emoji';
-  margin:0;
-  background: #f7f7f8;
-  color:#111;
+/*********************************************************
+ * LAYOUT (container, grid, responsivitet)
+ *********************************************************/
+.container {
+  max-width: 1120px;          /* tidigare 980 – lite luftigare */
+  margin-inline: auto;
+  padding-inline: 16px;        /* jämnare padding */
 }
 
-.container{
-  max-width: 980px;
-  margin: 0 auto;
-  padding: 24px;
+/* Actions-rad som layout-element (filter/sök/knappar) */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 16px;
+}
+.actions .ghost { opacity: .9; }
+
+/* Grid – mobile first */
+.grid {
+  --gap: 16px;
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: 1fr;  /* 1 kolumn på mobil */
+}
+/* ≥ 520px: 2 kolumner */
+@media (min-width: 520px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* ≥ 880px: 3 kolumner */
+@media (min-width: 880px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    --gap: 20px;
+  }
+}
+/* ≥ 1200px: 4 kolumner (valfritt – ta bort om du vill stanna på 3) */
+@media (min-width: 1200px) {
+  .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
-.header{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
+/*********************************************************
+ * HEADER (titelrad/topbar)
+ *********************************************************/
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   margin-bottom: 20px;
 }
-
-h1{
+h1 {
   font-size: clamp(22px, 3vw, 28px);
-  margin:0;
+  margin: 0;
 }
 
-.actions{
-  display:flex;
-  gap:10px;
-  flex-wrap: wrap;
-}
-
-button{
-  border:1px solid #ddd;
-  padding:10px 14px;
+/*********************************************************
+ * BUTTONS (knappar, ghost, active, focus)
+ *********************************************************/
+button {
+  border: 1px solid rgba(0,0,0,.15);
+  padding: 10px 14px;
   border-radius: var(--radius);
-  background:white;
-  cursor:pointer;
+  background: #fff;
+  cursor: pointer;
   transition: transform .06s ease, box-shadow .06s ease;
 }
+button:hover { box-shadow: 0 8px 20px rgba(0,0,0,.06); }
+button:active { transform: scale(.98); }
 
-button:hover{ box-shadow: 0 8px 20px rgba(0,0,0,.06) }
-button:active{ transform: scale(.98) }
-
-.grid{
-  display:grid;
-  grid-template-columns: repeat(3, minmax(0,1fr));
-  gap: 16px;
-}
-
-@media (max-width: 780px){
-  .grid{ grid-template-columns: 1fr; }
-}
-
-.card{
-  background: white;
-  border-radius: var(--radius);
-  border:1px solid #eee;
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-}
-.card { will-change: transform; transition: box-shadow .15s ease; }
-.card:hover { box-shadow: 0 14px 30px rgba(0,0,0,.08); }
-
-
-.card img{
-  
-  width:100%;
-  aspect-ratio: 4/3;
-  object-fit: contain;
-  background:#f0f0f2;
-}
-
-.card .content{
-  padding: 14px;
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-
-.badges{
-  display:flex; gap:8px; flex-wrap:wrap;
-}
-
-.badge{
-  font-size:12px; padding:4px 8px; border-radius:999px; background:#f2f2f5; border:1px solid #eee;
-}
-
-.footer{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding: 12px 14px 16px;
-}
-
-.ghost{
+button.ghost {
   background: transparent;
-  border:1px dashed #ccc;
+  border: 1px dashed #ccc;
 }
-
-.empty{
-  text-align:center;
-  padding: 24px;
-  color:#777;
-}
-
-/* Aktiv kategori-knapp */
 button.active {
   background: #2a6df4;
+  border-color: #2a6df4;
   color: #fff;
-  border: 1px solid #2a6df4;
 }
-
 /* Tillgänglighet/feedback */
 button:focus-visible {
   outline: 2px solid #2a6df4;
   outline-offset: 2px;
 }
 
+/*********************************************************
+ * FORMS (sökfält, select)
+ *********************************************************/
+input[type="text"], select {
+  width: 100%;
+  max-width: 420px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,.15);
+  background: #fff;
+}
+:root[data-theme="dark"] input[type="text"],
+:root[data-theme="dark"] select {
+  background: #111;
+  border-color: rgba(255,255,255,.15);
+  color: #fff;
+}
+
+/*********************************************************
+ * CARD (kort, bild, innehåll, footer)
+ *********************************************************/
+.card {
+  background: var(--card-bg, #fff);
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+  transition: box-shadow .15s ease;
+}
+.card:hover { box-shadow: 0 14px 30px rgba(0,0,0,.08); }
+
+/* Bild i kortet: gemensam höjd med aspect-ratio */
+.card img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;         /* du använde contain → behåller det */
+  display: block;
+  background: #f0f0f2;         /* fallback-yta */
+}
+
+/* Innehållsdel */
+.card .content {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Footer (items + hjärta) */
+.card .footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px 16px;
+  border-top: 1px solid rgba(0,0,0,.06);
+}
+
+/* Hjärtknapp i kort: nollställ bas-stilar */
 .card button {
   background: none;
   border: none;
@@ -143,36 +183,40 @@ button:focus-visible {
 }
 .card button:hover { transform: scale(1.05); }
 
+/* Dark card-nyanser */
+:root[data-theme="dark"] .card {
+  --card-bg: #0e0e0f;
+  border-color: rgba(255,255,255,.08);
+}
+:root[data-theme="dark"] .card .footer {
+  border-top-color: rgba(255,255,255,.08);
+}
+
+/*********************************************************
+ * BADGES (tags)
+ *********************************************************/
+.badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.badge  {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.06);
+  border: 1px solid #eee;
+}
+:root[data-theme="dark"] .badge { background: rgba(255,255,255,.08); }
+
+/*********************************************************
+ * STATUS / EMPTY (tomma/resultat & fel)
+ *********************************************************/
 .status, .empty {
   text-align: center;
   padding: 40px 16px;
-  opacity: 0.85;
-}
-
-.status.error {
-  color: #d33;
-}
-
-.empty button {
-  margin-top: 12px;
-  background: #2a6df4;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.empty button:hover {
-  background: #1d4ed8;
-}
-
-.status, .empty {
-  text-align: center;
-  padding: 40px 16px;
-  opacity: 0.9;
+  opacity: 0.9;                /* slog ihop dubbletter (0.85 + 0.9) */
 }
 .status.error { color: #d33; }
+
+.empty { color: #777; padding: 24px; } /* din tidigare empty-look */
+.empty button,
 .status.error button {
   margin-top: 12px;
   background: #2a6df4;
@@ -182,6 +226,48 @@ button:focus-visible {
   border-radius: 8px;
   cursor: pointer;
 }
+.empty button:hover,
 .status.error button:hover { background: #1d4ed8; }
 
-.empty button:hover { background: #1d4ed8; }
+/*********************************************************
+ * SKELETON (laddnings-skelett)
+ *********************************************************/
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.card.skeleton { pointer-events: none; }
+.skeleton .sk-img,
+.skeleton .sk-line,
+.skeleton .sk-tag,
+.skeleton .sk-heart {
+  background: linear-gradient(90deg, rgba(0,0,0,0.06), rgba(0,0,0,0.12), rgba(0,0,0,0.06));
+  background-size: 200% 100%;
+  animation: shimmer 1.2s ease-in-out infinite;
+  border-radius: 10px;
+}
+:root[data-theme="dark"] .skeleton .sk-img,
+:root[data-theme="dark"] .skeleton .sk-line,
+:root[data-theme="dark"] .skeleton .sk-tag,
+:root[data-theme="dark"] .skeleton .sk-heart {
+  background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+}
+.skeleton .sk-img      { width: 100%; aspect-ratio: 4 / 3; }
+.skeleton .sk-content  { padding: 12px; }
+.skeleton .sk-line     { height: 10px; margin: 8px 0; }
+.skeleton .sk-w-50     { width: 50%; }
+.skeleton .sk-w-60     { width: 60%; }
+.skeleton .sk-w-90     { width: 90%; }
+.skeleton .sk-tags     { display: flex; gap: 8px; margin-top: 8px; }
+.skeleton .sk-tag      { width: 56px; height: 18px; border-radius: 999px; }
+.skeleton .sk-footer   { display:flex; align-items:center; justify-content:space-between; padding: 12px; }
+.skeleton .sk-heart    { width: 24px; height: 24px; border-radius: 8px; }
+
+/*********************************************************
+ * SMALL-SCREEN TWEAKS
+ *********************************************************/
+@media (max-width: 390px) {
+  .actions { gap: 8px; }
+  button { padding: 9px 12px; }
+  .badge { font-size: 11px; }
+}

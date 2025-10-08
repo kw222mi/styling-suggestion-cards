@@ -1,0 +1,21 @@
+/*********************************************************
+ * BASE (variabler, reset, dark-mode)
+ *********************************************************/
+:root {
+  --radius: 16px;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] { color-scheme: dark; }
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji','Segoe UI Emoji';
+  margin: 0;
+  background: #f7f7f8;
+  color: #111;
+}
+
+/* Dark mode – generella overrides som gäller fler komponenter */
+:root[data-theme="dark"] body { background:#0f1115; color:#e7eaf0; }

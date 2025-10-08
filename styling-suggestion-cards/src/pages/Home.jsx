@@ -6,6 +6,9 @@ import Filzer from "../components/Filzer.jsx";
 import SearchBar from "../components/SearchBar.jsx";
 import StyleCard from "../components/StyleCard.jsx";
 import { copy } from "../lib/clipboard.js";
+import SkeletonGrid from "../components/SkeletonGrid.jsx";
+import useFilterSearch from "../hooks/useFilterSearch.js";
+
 
 const FAVORITES_KEY = "ssc_favorites_v2";
 
@@ -19,6 +22,7 @@ const pickRandom = (arr, n = 3) => {
 };
 
 export default function Home() {
+  
 
   const [offline, setOffline] = useState(!navigator.onLine);
   useEffect(() => {
@@ -81,23 +85,14 @@ const sharedIds = useMemo(() => {
     setSuggestions(pre.length ? pre : pickRandom(all));
   }, [loading, all, sharedIds]);
 
-  // Filtrering/sök
-  const filtered = useMemo(() => {
-    const byCat =
-      category === "all" ? all : all.filter((o) => o.category === category);
-    const term = q.trim().toLowerCase();
-    if (!term) return byCat;
-    return byCat.filter(
-      (o) =>
-        o.title.toLowerCase().includes(term) ||
-        o.description.toLowerCase().includes(term) ||
-        o.tags.some((t) => t.toLowerCase().includes(term)) ||
-        o.items.some((i) => i.toLowerCase().includes(term))
-    );
-  }, [all, category, q]);
+   const { filtered, hasActiveFilter } = useFilterSearch(all, {
+     category,
+     q,
+     sharedIds,
+   });
 
   // Vad som visas: filtrerat om filter/sök/share aktivt, annars 3 slump
-  const hasActiveFilter = category !== "all" || q.trim() !== "" || !!sharedIds;
+
   const displayed = useMemo(() => {
     if (hasActiveFilter) return filtered;
     return suggestions;
@@ -107,6 +102,8 @@ const sharedIds = useMemo(() => {
     () => new Set(favorites.map((f) => f.id)),
     [favorites]
   );
+
+
 
   // Actions
   const newStyle = () => {
@@ -164,7 +161,7 @@ const shareLink = async () => {
         </div>
       )}
 
-      {loading && <div className="status">Laddar outfits...</div>}
+      {loading && <SkeletonGrid count={3} />}
 
       {error && (
         <div className="status error">

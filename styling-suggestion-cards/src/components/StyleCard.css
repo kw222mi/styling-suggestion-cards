@@ -1,0 +1,42 @@
+/* grundkort */
+.card {
+  background: var(--card-bg, #fff);
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+  transition: box-shadow .15s ease;
+}
+.card:hover { box-shadow: 0 14px 30px rgba(0,0,0,.08); }
+
+/* bild */
+.card img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: contain;  /* du kör contain */
+  display: block;
+  background: #f0f0f2;
+}
+
+/* content & footer */
+.card .content { padding: 14px; display: flex; flex-direction: column; gap: 6px; }
+.card .footer  { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 12px 14px 16px; border-top: 1px solid rgba(0,0,0,.06); }
+
+/* badges */
+.badges { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.badge  { font-size: 12px; padding: 4px 8px; border-radius: 999px; background: rgba(0,0,0,.06); border: 1px solid #eee; }
+:root[data-theme="dark"] .badge { background: #1b2030; border-color: #202436; }
+
+/* hjärtknapp i kortet */
+.card button { background: none; border: none; cursor: pointer; padding: 0; color: inherit; }
+.card button:hover { transform: scale(1.05); }
+
+/* dark-nyanser för kortet */
+:root[data-theme="dark"] .card {
+  --card-bg: #0e0e0f;
+  border-color: rgba(255,255,255,.08);
+}
+:root[data-theme="dark"] .card .footer { border-top-color: rgba(255,255,255,.08); }

@@ -1,0 +1,39 @@
+/*********************************************************
+ * LAYOUT (container, grid, responsivitet)
+ *********************************************************/
+.container {
+  max-width: 1120px;
+  margin-inline: auto;
+  padding-inline: 16px;
+}
+
+/* Grid – mobile first */
+.grid {
+  --gap: 16px;
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: 1fr;  /* 1 kolumn på mobil */
+}
+
+/* ≥ 520px: 2 kolumner */
+@media (min-width: 520px) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ≥ 880px: 3 kolumner */
+@media (min-width: 880px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    --gap: 20px;
+  }
+}
+
+/* ≥ 1200px: 4 kolumner (valfritt) */
+@media (min-width: 1200px) {
+  .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* Små skärmar */
+@media (max-width: 390px) {
+  .badge { font-size: 11px; }
+}

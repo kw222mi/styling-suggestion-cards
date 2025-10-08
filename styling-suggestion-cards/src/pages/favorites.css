@@ -1,0 +1,17 @@
+/* återanvänder samma status/empty-stil för konsekvens */
+.status, .empty { text-align: center; padding: 40px 16px; opacity: 0.9; }
+.status.error   { color: #d33; }
+
+.empty { color: #777; padding: 24px; }
+.empty button,
+.status.error button {
+  margin-top: 12px;
+  background: #2a6df4;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.empty button:hover,
+.status.error button:hover { background: #1d4ed8; }

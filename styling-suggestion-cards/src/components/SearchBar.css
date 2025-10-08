@@ -1,0 +1,14 @@
+/* endast inputen i SearchBar */
+.searchbar-input {
+  width: 100%;
+  max-width: 420px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,.15);
+  background: #fff;
+}
+:root[data-theme="dark"] .searchbar-input {
+  background: #111;
+  border-color: rgba(255,255,255,.15);
+  color: #fff;
+}

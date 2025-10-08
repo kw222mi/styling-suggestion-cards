@@ -10,7 +10,7 @@ const CATEGORIES = [
 
 export default function Filzer({ category, setCategory }) {
   return (
-    <div className="actions" style={{ marginBottom: 16, flexWrap: "wrap" }}>
+    <div className="filzer actions">
       {CATEGORIES.map((c) => (
         <button
           key={c.id}

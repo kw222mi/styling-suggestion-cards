@@ -1,0 +1,32 @@
+/* wrappern gör att detta bara gäller i Filzer */
+.filzer { margin-bottom: 16px; }
+
+.filzer.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+/* knappar i Filzer */
+.filzer button {
+  border: 1px solid rgba(0,0,0,.15);
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  background: #fff;
+  cursor: pointer;
+  transition: transform .06s ease, box-shadow .06s ease;
+}
+.filzer button:hover { box-shadow: 0 8px 20px rgba(0,0,0,.06); }
+.filzer button:active { transform: scale(.98); }
+
+.filzer button.ghost { background: transparent; border: 1px dashed #ccc; }
+.filzer button.active { background: #2a6df4; border-color: #2a6df4; color: #fff; }
+.filzer button:focus-visible { outline: 2px solid #2a6df4; outline-offset: 2px; }
+
+/* dark för knappar i Filzer */
+:root[data-theme="dark"] .filzer button {
+  background: #151821;
+  border-color: #202436;
+  color: #e7eaf0;
+}
