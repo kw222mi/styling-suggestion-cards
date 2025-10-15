@@ -9,25 +9,27 @@ import { copy } from "../lib/clipboard.js";
 import SkeletonGrid from "../components/SkeletonGrid.jsx";
 import useFilterSearch from "../hooks/useFilterSearch.js";
 
-
 const FAVORITES_KEY = "ssc_favorites_v2";
 
 const pickRandom = (arr, n = 3) => {
-  const copy = [...arr];
-  for (let i = copy.length - 1; i > 0; i--) {
+  const copyArr = [...arr];
+  for (let i = copyArr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
+    [copyArr[i], copyArr[j]] = [copyArr[j], copyArr[i]];
   }
-  return copy.slice(0, n);
+  return copyArr.slice(0, n);
 };
 
 export default function Home() {
-  
+  // mode: "shuffle" eller "sort"
+  const [mode, setMode] = useState("shuffle");
+  const [sortBy, setSortBy] = useState("title-asc"); // används bara i sort-läge
 
+  // Offline-indikator
   const [offline, setOffline] = useState(!navigator.onLine);
   useEffect(() => {
-    const up = () => setOffline(false),
-      down = () => setOffline(true);
+    const up = () => setOffline(false);
+    const down = () => setOffline(true);
     window.addEventListener("online", up);
     window.addEventListener("offline", down);
     return () => {
@@ -39,7 +41,7 @@ export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // 1) Ladda data (ALLTID första hook)
- const { outfits: all, error, loading, reload } = useOutfits();
+  const { outfits: all, error, loading, reload } = useOutfits();
 
   // 2) Övriga hooks (körs alltid, i samma ordning)
   const [favorites, setFavorites] = useState(() => {
@@ -57,17 +59,16 @@ export default function Home() {
   const [q, setQ] = useState("");
 
   // Läs ev. delade id:n från URL
-const sharedIds = useMemo(() => {
-  const s = searchParams.get("share");
-  if (!s) return null;
-  const ids = s
-    .split(",")
-    .map((x) => x.trim())
-    .filter(Boolean);
-  if (ids.length === 0) return null;
-  return new Set(ids);
-}, [searchParams]);
-
+  const sharedIds = useMemo(() => {
+    const s = searchParams.get("share");
+    if (!s) return null;
+    const ids = s
+      .split(",")
+      .map((x) => x.trim())
+      .filter(Boolean);
+    if (ids.length === 0) return null;
+    return new Set(ids);
+  }, [searchParams]);
 
   // Rensa ?share när användaren börjar filtrera/söka
   useEffect(() => {
@@ -77,36 +78,37 @@ const sharedIds = useMemo(() => {
     });
   }, [category, q, setSearchParams]);
 
-  // Första förslag när data finns
+  // 3) Filtrering (utan sort) och sorterad variant
+  const { filtered, sorted, hasActiveFilter } = useFilterSearch(all, {
+    category,
+    q,
+    sharedIds,
+    sortBy: mode === "sort" ? sortBy : "none",
+  });
+
+  // 4) Slump-förslag när data finns & när filter ändras i shuffle-läge
   const [suggestions, setSuggestions] = useState([]);
   useEffect(() => {
     if (loading || !all.length) return;
-    const pre = sharedIds ? all.filter((o) => sharedIds.has(o.id)) : [];
-    setSuggestions(pre.length ? pre : pickRandom(all));
-  }, [loading, all, sharedIds]);
+    // pool = aktuell filtermängd utan sort (så shuffle verkligen slumpas inom filtret)
+    const pool = hasActiveFilter ? filtered : all;
+    const pre = sharedIds ? all.filter((o) => sharedIds.has(o.id)) : null;
+    setSuggestions(pre && pre.length ? pre : pickRandom(pool));
+    // Kör om när filter ändras ELLER när man byter till shuffle-läge
+  }, [loading, all, filtered, hasActiveFilter, sharedIds, mode]);
 
-   const { filtered, hasActiveFilter } = useFilterSearch(all, {
-     category,
-     q,
-     sharedIds,
-   });
-
-  // Vad som visas: filtrerat om filter/sök/share aktivt, annars 3 slump
-
+  // 5) Vad som visas
   const displayed = useMemo(() => {
-    if (hasActiveFilter) return filtered;
-    return suggestions;
-  }, [hasActiveFilter, filtered, suggestions]);
+    return mode === "sort" ? sorted : suggestions;
+  }, [mode, sorted, suggestions]);
 
   const favoriteIds = useMemo(
     () => new Set(favorites.map((f) => f.id)),
     [favorites]
   );
 
-
-
   // Actions
-  const newStyle = () => {
+  const reshuffle = () => {
     const pool = hasActiveFilter ? filtered : all;
     setSuggestions(pickRandom(pool));
     setSearchParams((p) => {
@@ -123,23 +125,23 @@ const sharedIds = useMemo(() => {
     );
   };
 
-const shareLink = async () => {
-  const pick = displayed.length > 3 ? displayed.slice(0, 3) : displayed;
-  const ids = pick.map((o) => o.id).join(",");
-  setSearchParams((p) => {
-    p.set("share", ids);
-    return p;
-  });
+  const shareLink = async () => {
+    // Dela de tre som syns först i aktuellt läge (shuffle: 3 slump, sort: topp 3 sorterade)
+    const pick = displayed.length > 3 ? displayed.slice(0, 3) : displayed;
+    const ids = pick.map((o) => o.id).join(",");
+    setSearchParams((p) => {
+      p.set("share", ids);
+      return p;
+    });
 
-  const url = `${location.origin}${location.pathname}?share=${ids}`;
-  const ok = await copy(url);
-
-  if (ok) {
-    alert("Länk kopierad! Klistra in vart du vill ✔");
-  } else {
-    window.prompt("Kunde inte kopiera automatiskt. Kopiera länken:", url);
-  }
-};
+    const url = `${location.origin}${location.pathname}?share=${ids}`;
+    const ok = await copy(url);
+    if (ok) {
+      alert("Länk kopierad! Klistra in vart du vill ✔");
+    } else {
+      window.prompt("Kunde inte kopiera automatiskt. Kopiera länken:", url);
+    }
+  };
 
   // Framer Motion-varianter
   const listVariants = {
@@ -152,7 +154,7 @@ const shareLink = async () => {
     exit: { opacity: 0, y: 8, scale: 0.98, transition: { duration: 0.15 } },
   };
 
-  // 3) Render – statusmeddelanden INNE i JSX, så hooks-ordningen alltid är konstant
+  // 6) Render
   return (
     <div>
       {offline && (
@@ -175,15 +177,56 @@ const shareLink = async () => {
           <Filzer category={category} setCategory={setCategory} />
           <SearchBar value={q} onChange={setQ} />
 
+          {/* Lägesväljare + sortering */}
           <div className="actions" style={{ marginBottom: 16 }}>
-            <motion.button
-              onClick={newStyle}
-              whileTap={{ scale: 0.9 }}
-              animate={{ scale: [1, 1.05, 1] }}
-              transition={{ duration: 0.25 }}
+            <div
+              role="group"
+              aria-label="Visningsläge"
+              style={{ display: "flex", gap: 8 }}
             >
-              🎲 Ny stil
-            </motion.button>
+              <button
+                className={mode === "shuffle" ? "active" : ""}
+                onClick={() => setMode("shuffle")}
+                aria-pressed={mode === "shuffle"}
+                title="Visa tre slumpade stilar"
+              >
+                🎲 Slumpa
+              </button>
+              <button
+                className={mode === "sort" ? "active" : ""}
+                onClick={() => setMode("sort")}
+                aria-pressed={mode === "sort"}
+                title="Visa alla sorterade resultat"
+              >
+                ⇅ Sortera
+              </button>
+            </div>
+
+            {mode === "shuffle" && (
+              <motion.button
+                onClick={reshuffle}
+                whileTap={{ scale: 0.9 }}
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 0.25 }}
+              >
+                🔄 Ny slump
+              </motion.button>
+            )}
+
+            {mode === "sort" && (
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                aria-label="Sortera"
+              >
+                <option value="title-asc">Titel A–Ö</option>
+                <option value="title-desc">Titel Ö–A</option>
+                <option value="category-asc">Kategori A–Ö</option>
+                <option value="category-desc">Kategori Ö–A</option>
+                <option value="id-asc">ID ↑</option>
+                <option value="id-desc">ID ↓</option>
+              </select>
+            )}
 
             <motion.button
               className="ghost"
@@ -211,7 +254,7 @@ const shareLink = async () => {
             </div>
           )}
 
-          {/* Grid med mjuk fade/scale */}
+          {/* Grid */}
           {displayed.length > 0 && (
             <motion.div
               className="grid"

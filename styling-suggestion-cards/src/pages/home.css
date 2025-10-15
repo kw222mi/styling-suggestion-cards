@@ -15,3 +15,28 @@
 }
 .empty button:hover,
 .status.error button:hover { background: #1d4ed8; }
+
+.actions select {
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,.15);
+  background: #fff;
+}
+:root[data-theme="dark"] .actions select {
+  background: #111;
+  border-color: rgba(255,255,255,.15);
+  color: #fff;
+}
+/* Lägg där du har knapp-stilar */
+.actions [role="group"] button.active {
+  background: #2a6df4;
+  color: #fff;
+  border-color: #2a6df4;
+}
+.actions [role="group"] button[aria-pressed="true"] {
+  /* extra tillgänglighet, samma som .active */
+  background: #2a6df4;
+  color: #fff;
+  border-color: #2a6df4;
+}
+
