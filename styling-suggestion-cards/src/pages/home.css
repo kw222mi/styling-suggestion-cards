@@ -16,27 +16,150 @@
 .empty button:hover,
 .status.error button:hover { background: #1d4ed8; }
 
-.actions select {
+./* Toolbar-layout */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.group { display: flex; align-items: center; gap: 8px; }
+.group-label { font-size: 12px; opacity: .7; }
+
+/* Segmented control */
+.segmented {
+  display: inline-flex;
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+.seg-btn {
+  padding: 8px 12px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.seg-btn + .seg-btn { border-left: 1px solid rgba(0,0,0,.12); }
+.seg-btn.is-active {
+  background: #2a6df4;
+  color: #fff;
+}
+
+/* Primär & ghost-knappar (matchar din stil) */
+.btn-primary {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #2a6df4;
+  background: #2a6df4;
+  color: #fff;
+  cursor: pointer;
+}
+.btn-ghost {
+  border: 1px dashed #ccc;
+  background: transparent;
+  padding: 10px 14px;
+  border-radius: 12px;
+}
+
+/* Visuell avdelare mellan grupper */
+.divider { width: 1px; height: 24px; background: rgba(0,0,0,.12); }
+
+/* Dark mode-nyanser */
+:root[data-theme="dark"] .segmented { background:#151821; border-color:#202436; }
+:root[data-theme="dark"] .seg-btn + .seg-btn { border-left-color:#202436; }
+:root[data-theme="dark"] .divider { background: rgba(255,255,255,.12); }
+
+/* === Toolbar-layout (scopad till Home) === */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+/* Grupp & etikett */
+.toolbar .group { display: flex; align-items: center; gap: 8px; }
+.toolbar .group-label { font-size: 12px; opacity: .7; }
+
+/* === Segmented control (tvinga inline-flex) === */
+.toolbar .segmented {
+  display: inline-flex;           /* <-- hindrar vertikal stapling */
+  border: 1px solid rgba(0,0,0,.15);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+/* Nolla globala knappstilar för segment-knapparna */
+.toolbar .segmented .seg-btn {
+  all: unset;                     /* nollställ ALLT så globala regler inte biter */
+  padding: 8px 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.toolbar .segmented .seg-btn + .seg-btn {
+  border-left: 1px solid rgba(0,0,0,.12);
+}
+.toolbar .segmented .seg-btn.is-active {
+  background: #2a6df4;
+  color: #fff;
+}
+
+/* === Primär & ghost inne i toolbar (överkör globala button) === */
+.toolbar .btn-primary,
+.toolbar .btn-ghost {
+  all: unset;                     /* nolla globala button-regler */
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.toolbar .btn-primary {
+  border: 1px solid #2a6df4;
+  background: #2a6df4;
+  color: #fff;
+}
+
+.toolbar .btn-ghost {
+  border: 1px dashed #ccc;
+  background: transparent;
+  color: inherit;
+}
+
+/* Visuell avdelare */
+.toolbar .divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(0,0,0,.12);
+}
+
+/* Selecten i toolbaren – matcha stil */
+.toolbar select {
   padding: 10px 12px;
   border-radius: 12px;
   border: 1px solid rgba(0,0,0,.15);
   background: #fff;
 }
-:root[data-theme="dark"] .actions select {
-  background: #111;
-  border-color: rgba(255,255,255,.15);
-  color: #fff;
-}
-/* Lägg där du har knapp-stilar */
-.actions [role="group"] button.active {
-  background: #2a6df4;
-  color: #fff;
-  border-color: #2a6df4;
-}
-.actions [role="group"] button[aria-pressed="true"] {
-  /* extra tillgänglighet, samma som .active */
-  background: #2a6df4;
-  color: #fff;
-  border-color: #2a6df4;
-}
 
+/* Dark mode-nyanser */
+:root[data-theme="dark"] .toolbar .segmented {
+  background: #151821; border-color: #202436;
+}
+:root[data-theme="dark"] .toolbar .segmented .seg-btn + .seg-btn {
+  border-left-color: #202436;
+}
+:root[data-theme="dark"] .toolbar .divider {
+  background: rgba(255,255,255,.12);
+}
+:root[data-theme="dark"] .toolbar select {
+  background: #111; border-color: rgba(255,255,255,.15); color: #fff;
+}

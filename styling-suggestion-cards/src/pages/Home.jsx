@@ -8,6 +8,8 @@ import StyleCard from "../components/StyleCard.jsx";
 import { copy } from "../lib/clipboard.js";
 import SkeletonGrid from "../components/SkeletonGrid.jsx";
 import useFilterSearch from "../hooks/useFilterSearch.js";
+import "./Home.css";
+
 
 const FAVORITES_KEY = "ssc_favorites_v2";
 
@@ -178,65 +180,63 @@ export default function Home() {
           <SearchBar value={q} onChange={setQ} />
 
           {/* Lägesväljare + sortering */}
-          <div className="actions" style={{ marginBottom: 16 }}>
-            <div
-              role="group"
-              aria-label="Visningsläge"
-              style={{ display: "flex", gap: 8 }}
-            >
-              <button
-                className={mode === "shuffle" ? "active" : ""}
-                onClick={() => setMode("shuffle")}
-                aria-pressed={mode === "shuffle"}
-                title="Visa tre slumpade stilar"
-              >
-                🎲 Slumpa
-              </button>
-              <button
-                className={mode === "sort" ? "active" : ""}
-                onClick={() => setMode("sort")}
-                aria-pressed={mode === "sort"}
-                title="Visa alla sorterade resultat"
-              >
-                ⇅ Sortera
-              </button>
+          <div className="toolbar">
+            {/* Visningsläge: segmented control */}
+            <div className="group">
+              <span className="group-label">Visning</span>
+              <div className="segmented" role="radiogroup" aria-label="Visning">
+                <button
+                  role="radio"
+                  aria-checked={mode === "shuffle"}
+                  className={`seg-btn ${mode === "shuffle" ? "is-active" : ""}`}
+                  onClick={() => setMode("shuffle")}
+                >
+                  🎲 Slumpa
+                </button>
+                <button
+                  role="radio"
+                  aria-checked={mode === "sort"}
+                  className={`seg-btn ${mode === "sort" ? "is-active" : ""}`}
+                  onClick={() => setMode("sort")}
+                >
+                  ⇅ Sortera
+                </button>
+              </div>
             </div>
 
-            {mode === "shuffle" && (
-              <motion.button
-                onClick={reshuffle}
-                whileTap={{ scale: 0.9 }}
-                animate={{ scale: [1, 1.05, 1] }}
-                transition={{ duration: 0.25 }}
-              >
-                🔄 Ny slump
-              </motion.button>
-            )}
-
+            {/* Sorteringsval (visas bara i sort-läge) */}
             {mode === "sort" && (
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                aria-label="Sortera"
-              >
-                <option value="title-asc">Titel A–Ö</option>
-                <option value="title-desc">Titel Ö–A</option>
-                <option value="category-asc">Kategori A–Ö</option>
-                <option value="category-desc">Kategori Ö–A</option>
-                <option value="id-asc">ID ↑</option>
-                <option value="id-desc">ID ↓</option>
-              </select>
+              <div className="group">
+                <span className="group-label">Sortering</span>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  aria-label="Sortera"
+                >
+                  <option value="title-asc">Titel A–Ö</option>
+                  <option value="title-desc">Titel Ö–A</option>
+                  <option value="category-asc">Kategori A–Ö</option>
+                  <option value="category-desc">Kategori Ö–A</option>
+                  <option value="id-asc">ID ↑</option>
+                  <option value="id-desc">ID ↓</option>
+                </select>
+              </div>
             )}
 
-            <motion.button
-              className="ghost"
-              onClick={shareLink}
-              whileTap={{ scale: 0.9 }}
-              animate={{ scale: [1, 1.05, 1] }}
-              transition={{ duration: 0.25 }}
-            >
+            {/* Primär åtgärd (visas bara i slump-läge) */}
+            {mode === "shuffle" && (
+              <button className="btn-primary" onClick={reshuffle}>
+                🔄 Ny slump
+              </button>
+            )}
+
+            {/* Visuell avdelare */}
+            <div className="divider" aria-hidden="true" />
+
+            {/* Sekundär åtgärd */}
+            <button className="btn-ghost" onClick={shareLink}>
               🔗 Dela dessa
-            </motion.button>
+            </button>
           </div>
 
           {/* Tomt tillstånd */}
