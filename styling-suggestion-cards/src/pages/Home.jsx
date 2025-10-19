@@ -8,7 +8,7 @@ import StyleCard from "../components/StyleCard/StyleCard.jsx";
 import { copy } from "../lib/clipboard.js";
 import SkeletonGrid from "../components/SkeletonGrid.jsx";
 import useFilterSearch from "../hooks/useFilterSearch.js";
-import "./Home.css";
+import "./home.css";
 import { useFavorites } from "../context/FavoritesContext.jsx";
 
 const pickRandom = (arr, n = 3) => {
