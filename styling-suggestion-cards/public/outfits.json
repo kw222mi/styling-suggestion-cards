@@ -6,7 +6,7 @@
     "category": "casual",
     "tags": ["vardag", "basic", "minimal"],
     "items": ["Blå jeans", "Vit t-shirt", "Sneakers"],
-    "image": "casual2.png"
+    "image": "assets/casual2.png"
   },
   {
     "id": "casual-2",
@@ -15,7 +15,7 @@
     "category": "casual",
     "tags": ["stickat", "mys", "lager"],
     "items": ["Stickad tröja", "Rak jeans", "Vita sneakers"],
-    "image": "casual2.png"
+    "image": "assets/casual2.png"
   },
   {
     "id": "casual-3",
@@ -24,7 +24,7 @@
     "category": "casual",
     "tags": ["denim", "lager"],
     "items": ["Jeansjacka", "Vit skjorta", "Mellanblå jeans"],
-    "image": "denim.png"
+    "image": "assets/denim.png"
   },
 
   {
@@ -34,7 +34,7 @@
     "category": "office",
     "tags": ["office", "tailoring"],
     "items": ["Kavaj", "T-shirt", "Pressveckbyxa", "Loafers"],
-    "image": "office.png"
+    "image": "assets/office.png"
   },
   {
     "id": "office-2",
@@ -43,7 +43,7 @@
     "category": "office",
     "tags": ["kostym", "monokrom"],
     "items": ["Kostymkavaj", "Kostymbyxa", "Silkestopp", "Loafers"],
-    "image": "office.png"
+    "image": "assets/office.png"
   },
   {
     "id": "office-3",
@@ -52,7 +52,7 @@
     "category": "office",
     "tags": ["business-casual", "lager"],
     "items": ["Vit skjorta", "Stickad väst", "Chinos", "Derbyskor"],
-    "image": "office.png"
+    "image": "assets/office.png"
   },
 
   {
@@ -62,7 +62,7 @@
     "category": "sporty",
     "tags": ["athleisure", "street"],
     "items": ["Hoodie", "Cargobyxa", "Chunky sneakers"],
-    "image": "sporty.png"
+    "image": "assets/sporty.png"
   },
   {
     "id": "sporty-2",
@@ -71,7 +71,7 @@
     "category": "sporty",
     "tags": ["löpning", "funktion"],
     "items": ["Löparjacka", "Tights", "Löparskor", "Keps"],
-    "image": "sporty.png"
+    "image": "assets/sporty.png"
   },
   {
     "id": "sporty-3",
@@ -80,7 +80,7 @@
     "category": "sporty",
     "tags": ["tennis", "clean"],
     "items": ["Pikétröja", "Vida joggers", "Vita sneakers"],
-    "image": "sporty.png"
+    "image": "assets/sporty.png"
   },
 
   {
@@ -90,7 +90,7 @@
     "category": "evening",
     "tags": ["kväll", "glow"],
     "items": ["Satintopp", "Svarta slacks", "Klackar", "Clutch"],
-    "image": "evening2.png"
+    "image": "assets/evening2.png"
   },
   {
     "id": "evening-2",
@@ -99,7 +99,7 @@
     "category": "evening",
     "tags": ["klänning", "klassiker"],
     "items": ["Svart klänning", "Slingbacks", "Metallic clutch"],
-    "image": "evening2.png"
+    "image": "assets/evening2.png"
   },
   {
     "id": "evening-3",
@@ -108,7 +108,7 @@
     "category": "evening",
     "tags": ["satinskjorta", "kostym"],
     "items": ["Satinskjorta", "Rak kostymbyxa", "Pumps", "Halsband"],
-    "image": "evening2.png"
+    "image": "assets/evening2.png"
   },
 
   {
@@ -118,7 +118,7 @@
     "category": "denim",
     "tags": ["denim", "vardag"],
     "items": ["Jeansjacka", "Vit t-shirt", "Ljus jeans", "Loafers"],
-    "image": "denim.png"
+    "image": "assets/denim.png"
   },
   {
     "id": "denim-2",
@@ -127,7 +127,7 @@
     "category": "denim",
     "tags": ["indigo", "wide-leg"],
     "items": ["Stickad topp", "Vida jeans", "Sneakers"],
-    "image": "denim.png"
+    "image": "assets/denim.png"
   },
   {
     "id": "denim-3",
@@ -136,6 +136,6 @@
     "category": "denim",
     "tags": ["trucker", "vintage"],
     "items": ["Denimjacka", "Vintage t-shirt", "Svarta jeans", "Chelsea boots"],
-    "image": "denim.png"
+    "image": "assets/denim.png"
   }
 ]

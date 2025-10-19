@@ -1,3 +1,4 @@
+// src/hooks/useOutfits.js
 import { useEffect, useState } from "react";
 
 export default function useOutfits() {
@@ -8,7 +9,7 @@ export default function useOutfits() {
 
   function reload() {
     setTick((t) => t + 1);
-  } // exponeras till UI
+  }
 
   async function fetchWithTimeout(url, { timeout = 6000, ...opts } = {}) {
     const controller = new AbortController();
@@ -40,12 +41,19 @@ export default function useOutfits() {
     return cleaned;
   }
 
+  // Bilderna ligger i public/assets/. Normalisera alla varianter till en giltig URL.
+  function normalizeImagePath(image) {
+    if (!image) return image;
+    // Redan absolut URL eller redan rot-relativ → låt vara
+    if (/^https?:\/\//i.test(image) || image.startsWith("/")) return image;
+    // Om JSON redan har "assets/fil.png"
+    if (image.startsWith("assets/")) return `/${image}`;
+    // Annars antar vi ett filnamn → pekar på /assets/fil.png
+    return `/assets/${image}`;
+  }
+
   function resolveImages(list) {
-    return list.map((o) => {
-      const file = (o.image || "").split("/").pop();
-      const url = new URL(`../assets/${file}`, import.meta.url).href;
-      return { ...o, image: url };
-    });
+    return list.map((o) => ({ ...o, image: normalizeImagePath(o.image) }));
   }
 
   useEffect(() => {
@@ -56,22 +64,20 @@ export default function useOutfits() {
       setError(null);
 
       try {
-        let res = await fetchWithTimeout("/data/outfits.json", {
-          timeout: 6000,
-        });
+        // Ligger outfits.json i public/ (rekommenderat)
+        let res = await fetchWithTimeout("/outfits.json", { timeout: 6000 });
 
-        // enkel retry
+        // enkel retry om första inte var OK
         if (!res.ok) {
-          res = await fetchWithTimeout("/data/outfits.json", { timeout: 6000 });
+          res = await fetchWithTimeout("/outfits.json", { timeout: 6000 });
         }
 
         if (!res.ok) {
-          // vänliga meddelanden per status
           if (res.status === 404) throw new Error("HTTP:404");
           throw new Error(`HTTP:${res.status || 0}`);
         }
 
-        // säkerställ att svaret verkligen är JSON (inte en 404-HTML)
+        // Säkerställ JSON (inte en HTML-sida)
         const ct = res.headers.get("content-type") || "";
         if (!ct.includes("application/json"))
           throw new Error("JSON:CONTENT_TYPE");
@@ -91,13 +97,12 @@ export default function useOutfits() {
           setError(null);
         }
       } catch (e) {
-        // mappa tekniska fel till vänliga texter
         let msg = "Ett fel uppstod när outfits skulle laddas.";
         const code = String(e?.message || "");
 
         if (code === "HTTP:404") {
           msg =
-            "Hittade inte datafilen (/data/outfits.json). Kontrollera att den ligger i mappen public/data.";
+            "Hittade inte datafilen (/outfits.json). Kontrollera att den ligger i projektets public/-mapp.";
         } else if (code.startsWith("HTTP:")) {
           const status = code.split(":")[1];
           msg = `Fel vid laddning av data (HTTP ${status}).`;
@@ -115,7 +120,6 @@ export default function useOutfits() {
         }
 
         if (!cancelled) setError(msg);
-        // (valfritt) console.warn("useOutfits error:", e);
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -124,7 +128,6 @@ export default function useOutfits() {
     return () => {
       cancelled = true;
     };
-    // tick triggar omhämtning via reload()
   }, [tick]);
 
   return { outfits, error, loading, reload };
