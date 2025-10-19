@@ -2,16 +2,14 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import useOutfits from "../hooks/useOutfits.js";
-import Filzer from "../components/Filzer.jsx";
-import SearchBar from "../components/SearchBar.jsx";
-import StyleCard from "../components/StyleCard.jsx";
+import Filzer from "../components/Filzer/Filzer.jsx";
+import SearchBar from "../components/SearchBar/SearchBar.jsx";
+import StyleCard from "../components/StyleCard/StyleCard.jsx";
 import { copy } from "../lib/clipboard.js";
 import SkeletonGrid from "../components/SkeletonGrid.jsx";
 import useFilterSearch from "../hooks/useFilterSearch.js";
 import "./Home.css";
-
-
-const FAVORITES_KEY = "ssc_favorites_v2";
+import { useFavorites } from "../context/FavoritesContext.jsx";
 
 const pickRandom = (arr, n = 3) => {
   const copyArr = [...arr];
@@ -23,11 +21,11 @@ const pickRandom = (arr, n = 3) => {
 };
 
 export default function Home() {
-  // mode: "shuffle" eller "sort"
-  const [mode, setMode] = useState("shuffle");
-  const [sortBy, setSortBy] = useState("title-asc"); // används bara i sort-läge
+  // === VISNINGSLÄGE ===
+  const [mode, setMode] = useState("shuffle"); // "shuffle" | "sort"
+  const [sortBy, setSortBy] = useState("title-asc");
 
-  // Offline-indikator
+  // === OFFLINE-INDIKATOR ===
   const [offline, setOffline] = useState(!navigator.onLine);
   useEffect(() => {
     const up = () => setOffline(false);
@@ -42,25 +40,17 @@ export default function Home() {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // 1) Ladda data (ALLTID första hook)
+  // === DATA (alltid först) ===
   const { outfits: all, error, loading, reload } = useOutfits();
 
-  // 2) Övriga hooks (körs alltid, i samma ordning)
-  const [favorites, setFavorites] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem(FAVORITES_KEY)) ?? [];
-    } catch {
-      return [];
-    }
-  });
-  useEffect(() => {
-    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
-  }, [favorites]);
+  // === FAVORITER FRÅN CONTEXT ===
+  const { favorites, toggleFavorite, isFavorite } = useFavorites();
 
+  // === FILTER/SÖKSTATE ===
   const [category, setCategory] = useState("all");
   const [q, setQ] = useState("");
 
-  // Läs ev. delade id:n från URL
+  // === DELADE ID:N FRÅN URL ===
   const sharedIds = useMemo(() => {
     const s = searchParams.get("share");
     if (!s) return null;
@@ -72,7 +62,7 @@ export default function Home() {
     return new Set(ids);
   }, [searchParams]);
 
-  // Rensa ?share när användaren börjar filtrera/söka
+  // Rensa ?share när man börjar filtrera/söka
   useEffect(() => {
     setSearchParams((p) => {
       if (p.has("share")) p.delete("share");
@@ -80,7 +70,7 @@ export default function Home() {
     });
   }, [category, q, setSearchParams]);
 
-  // 3) Filtrering (utan sort) och sorterad variant
+  // === FILTRERING + SORTERING ===
   const { filtered, sorted, hasActiveFilter } = useFilterSearch(all, {
     category,
     q,
@@ -88,28 +78,22 @@ export default function Home() {
     sortBy: mode === "sort" ? sortBy : "none",
   });
 
-  // 4) Slump-förslag när data finns & när filter ändras i shuffle-läge
+  // === SLUMP-FÖRSLAG ===
   const [suggestions, setSuggestions] = useState([]);
   useEffect(() => {
     if (loading || !all.length) return;
-    // pool = aktuell filtermängd utan sort (så shuffle verkligen slumpas inom filtret)
+    // Slumpa inom aktuell filtermängd (utan sort)
     const pool = hasActiveFilter ? filtered : all;
     const pre = sharedIds ? all.filter((o) => sharedIds.has(o.id)) : null;
     setSuggestions(pre && pre.length ? pre : pickRandom(pool));
-    // Kör om när filter ändras ELLER när man byter till shuffle-läge
   }, [loading, all, filtered, hasActiveFilter, sharedIds, mode]);
 
-  // 5) Vad som visas
+  // === VAD SOM VISAS ===
   const displayed = useMemo(() => {
     return mode === "sort" ? sorted : suggestions;
   }, [mode, sorted, suggestions]);
 
-  const favoriteIds = useMemo(
-    () => new Set(favorites.map((f) => f.id)),
-    [favorites]
-  );
-
-  // Actions
+  // === ACTIONS ===
   const reshuffle = () => {
     const pool = hasActiveFilter ? filtered : all;
     setSuggestions(pickRandom(pool));
@@ -119,23 +103,13 @@ export default function Home() {
     });
   };
 
-  const toggleFavorite = (o) => {
-    setFavorites((prev) =>
-      prev.find((p) => p.id === o.id)
-        ? prev.filter((p) => p.id !== o.id)
-        : [...prev, o]
-    );
-  };
-
   const shareLink = async () => {
-    // Dela de tre som syns först i aktuellt läge (shuffle: 3 slump, sort: topp 3 sorterade)
     const pick = displayed.length > 3 ? displayed.slice(0, 3) : displayed;
     const ids = pick.map((o) => o.id).join(",");
     setSearchParams((p) => {
       p.set("share", ids);
       return p;
     });
-
     const url = `${location.origin}${location.pathname}?share=${ids}`;
     const ok = await copy(url);
     if (ok) {
@@ -145,7 +119,7 @@ export default function Home() {
     }
   };
 
-  // Framer Motion-varianter
+  // === FRAMER MOTION ===
   const listVariants = {
     hidden: { opacity: 1 },
     show: { opacity: 1, transition: { staggerChildren: 0.06 } },
@@ -156,7 +130,7 @@ export default function Home() {
     exit: { opacity: 0, y: 8, scale: 0.98, transition: { duration: 0.15 } },
   };
 
-  // 6) Render
+  // === RENDER ===
   return (
     <div>
       {offline && (
@@ -179,9 +153,8 @@ export default function Home() {
           <Filzer category={category} setCategory={setCategory} />
           <SearchBar value={q} onChange={setQ} />
 
-          {/* Lägesväljare + sortering */}
+          {/* Toolbar: läge, sortering, dela */}
           <div className="toolbar">
-            {/* Visningsläge: segmented control */}
             <div className="group">
               <span className="group-label">Visning</span>
               <div className="segmented" role="radiogroup" aria-label="Visning">
@@ -204,7 +177,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Sorteringsval (visas bara i sort-läge) */}
             {mode === "sort" && (
               <div className="group">
                 <span className="group-label">Sortering</span>
@@ -223,17 +195,14 @@ export default function Home() {
               </div>
             )}
 
-            {/* Primär åtgärd (visas bara i slump-läge) */}
             {mode === "shuffle" && (
               <button className="btn-primary" onClick={reshuffle}>
                 🔄 Ny slump
               </button>
             )}
 
-            {/* Visuell avdelare */}
             <div className="divider" aria-hidden="true" />
 
-            {/* Sekundär åtgärd */}
             <button className="btn-ghost" onClick={shareLink}>
               🔗 Dela dessa
             </button>
@@ -272,7 +241,7 @@ export default function Home() {
                   >
                     <StyleCard
                       outfit={o}
-                      isFavorite={favoriteIds.has(o.id)}
+                      isFavorite={isFavorite(o.id)}
                       onToggleFavorite={() => toggleFavorite(o)}
                     />
                   </motion.div>

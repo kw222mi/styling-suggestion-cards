@@ -1,4 +1,5 @@
-// src/components/Filzer.jsx
+import "./Filzer.css"
+
 const CATEGORIES = [
   { id: "all", label: "Alla" },
   { id: "casual", label: "Casual" },

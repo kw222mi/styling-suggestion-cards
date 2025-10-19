@@ -2,7 +2,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import StyleCard from "../components/StyleCard.jsx";
+import StyleCard from "../components/StyleCard/StyleCard.jsx";
+import "./favorites.css"
 
 const FAVORITES_KEY = "ssc_favorites_v2";
 

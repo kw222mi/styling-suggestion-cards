@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useTheme } from "../theme/ThemeProvider.jsx";
+import { useTheme } from "../../theme/ThemeProvider.jsx";
+import "./Header.css"
 
 export default function Header() {
   const { pathname } = useLocation();

@@ -1,6 +1,6 @@
 
 import { Routes, Route, Navigate } from "react-router-dom";
-import Header from "./components/Header.jsx";
+import Header from "./components/Header/Header.jsx";
 import Home from "./pages/Home.jsx";
 import Favorites from "./pages/Favorites.jsx";
 

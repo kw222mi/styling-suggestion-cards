@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import "./SkeletonCard.css"
 
 export default function SkeletonCard() {
   return (

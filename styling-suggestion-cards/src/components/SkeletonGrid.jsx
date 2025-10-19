@@ -1,4 +1,4 @@
-import SkeletonCard from "./SkeletonCard.jsx";
+import SkeletonCard from "./SkeletonCard/SkeletonCard.jsx";
 
 export default function SkeletonGrid({ count = 3 }) {
   return (
