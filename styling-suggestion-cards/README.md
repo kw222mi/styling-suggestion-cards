@@ -1,70 +1,81 @@
 # 👗 Styling Suggestion Cards
 
-En interaktiv React-app som ger **outfitförslag med ett klick**.  
-Byggd för att kombinera **frontend-utveckling** med min bakgrund inom **visual merchandising & styling**.  
+An interactive React app that provides **outfit suggestions with a single click**.  
+Built to combine my background in **visual merchandising & styling** with modern **frontend development**.
+
 
 ## 🚀 Features
-- 🎲 **Ny stil** – slumpa fram 3 outfits
-- 🏷️ **Filtrering per kategori** – Casual, Office, Sporty, Evening, Denim
-- 🔍 **Sökfunktion** – hitta outfits via titel, tags eller plagg
-- 💖 **Favoriter** – spara och hantera favoriter (persistent via `localStorage`)
-- 🔗 **Dela-länk** – kopiera en direktlänk till exakt de 3 kort som visas
-- 🌓 **Dark/Light Mode** – växla tema och behåll inställningen
-- ✨ **Framer Motion** – mjuka animationer (kort fade/scale, knapp-bounce, favorit-pop)
+- 🎲 **New Style** – randomly generate 3 outfits  
+- 🏷️ **Category Filtering** – Casual, Office, Sporty, Evening, Denim  
+- 🔍 **Search Function** – find outfits by title, tags, or items  
+- 💖 **Favorites** – save and manage favorites (persistent via `localStorage`)  
+- 🔗 **Share Link** – copy a direct link to the exact 3 cards currently displayed  
+- 🌓 **Dark/Light Mode** – toggle theme and remember your setting  
+- ✨ **Framer Motion** – smooth animations (fade/scale transitions, button bounce, favorite pop)
 
 ---
 
 ## 🖼️ Screenshots
-*(lägg till riktiga screenshots här)*  
+*(add real screenshots here)*
 
-- **Startsida (ljus)**  
-- **Startsida (mörk)**  
-- **Favoritsida**  
-- **Filtrering + sök**
+- **Home Page (Light Mode)**
+- **Home Page (Dark Mode)**
+- **Favorites View**
+- **Filtering + Search**
+
 
 ---
 
-## 🛠️ Tekniker
+## 🛠️ Tech Stack
 - **React + Vite**
-- **React Router DOM** (routing mellan sidor)
-- **Framer Motion** (animeringar)
-- **LocalStorage** (spara favoriter)
-- **Custom Hooks** (state persistence, theme)
-- **Responsiv CSS** (mobile-first)
+- **React Router DOM** (page routing)
+- **Framer Motion** (animations)
+- **LocalStorage** (persistent favorites)
+- **Custom Hooks** (state persistence, theme handling)
+- **Responsive CSS** (mobile-first)
+
 
 ---
 
 ## 📦 Installation
+
 ```bash
-# Klona repo
-git clone https://github.com/[ditt-användarnamn]/styling-suggestion-cards.git
+# Clone repository
+git clone https://github.com/[your-username]/styling-suggestion-cards.git
 
 cd styling-suggestion-cards
 
-# Installera dependencies
+# Install dependencies
 npm install
 
-# Starta dev-server
+# Start dev server
 npm run dev
 
+```
+
+---
+
 ## 🌐 Demo
-👉 **Live-demo:** [demo-länk]  
-👉 **GitHub:** [repo-länk]
-
----
-
-## 📌 Nästa steg
-- [ ] Bygga ut med **API-integration** (t.ex. riktiga produktbilder eller en mode-API)  
-- [ ] Förbättra **state-hantering** genom att testa Context API eller Redux Toolkit  
-- [ ] Utforska **datamodellering** för outfits (relation mellan plagg, kategorier och tags)  
-- [ ] Skapa **enhetstester** (React Testing Library) för att öva testdriven utveckling  
+👉 **Live demo:** https://styling-suggestion-cards-fsqo.vercel.app  
+👉 **GitHub:** https://github.com/[your-username]/styling-suggestion-cards
 
 
 ---
 
-## 💼 Om projektet
-Jag byggde *Styling Suggestion Cards* som en del av min portfolio för att visa hur jag:
-- Arbetar med **React och moderna UI-patterns**  
-- Bygger **interaktiva och responsiva gränssnitt**  
-- Använder **animationer** för att skapa en levande användarupplevelse**  
-- Kombinerar **teknik** med **mode och visual merchandising**
+## 📌 Next Steps
+- [ ] Extend with **API integration** (e.g., real product data or fashion APIs)  
+- [ ] Improve **state management** by exploring Context API or Redux Toolkit  
+- [ ] Experiment with **data modeling** for outfits (relationships between items, categories, and tags)  
+- [ ] Add **unit tests** (React Testing Library) to practice test-driven development
+ 
+
+
+---
+
+## 💼 About the Project
+I built *Styling Suggestion Cards* as part of my portfolio to demonstrate how I:
+- Work with **React and modern UI patterns**
+- Build **interactive and responsive user interfaces**
+- Use **animation** to enhance user experience and visual flow
+- Combine **technical development** with my **fashion and visual merchandising** background
+
